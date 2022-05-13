@@ -100,14 +100,12 @@ Inventory inventory;
 * Accepts a `Product` and returns the corresponding `Product`.
     * If the given product is not found, will throw a
       `ProductNotFoundException`
-![GET a Product](images/overflow_design_document/sequence_diagrams/get_product_SD.png)
 
 ## 6.2 *Create Product Endpoint*
 
 * Accepts `POST` requests to `/products`
 * Accepts data to create a new `Product` with a provided name, a quantity, and price. Returns the new `Product` including 
   a unique productId assigned by the Service.
-  ![CREATE a Product](images/overflow_design_document/sequence_diagrams/create_product_SD.png)
 
 ## 6.3 *Update Product Endpoint*
 
@@ -115,14 +113,12 @@ Inventory inventory;
 * Accepts data to update a `Product` including name, price and/or quantity. Returns the updated
   `Product`.
     * If the product is not found, will throw a `ProductNotFoundException`
-![UPDATE a Product](images/overflow_design_document/sequence_diagrams/update_product_SD.png)
 
 ## 6.4 *Delete Product Endpoint*
 
 * Accepts `DELETE` requests to `/products/productId`
 * Accepts data to delete a `Product` associated with the productId. 
     * If the product is not found, will throw a `ProductNotFoundException`
-![DELETE a Product](images/overflow_design_document/sequence_diagrams/delete_product_SD.png)
 
 ## 6.5 *Get Inventory Endpoint*
 
@@ -143,14 +139,12 @@ Inventory inventory;
 * Accepts a `Client` and returns the corresponding `Client`.
     * If the given customer is not found, will throw a
       `ClientNotFoundException`
-![GET a Client](images/overflow_design_document/sequence_diagrams/get_client_SD.png)
 
 ## 6.8 *Create ClientAccount Endpoint*
 
 * Accepts `POST` requests to `/clients`
 * Accepts data to create a new `Client` with a name, email and phoneNumber. Returns the
   new `Client` including a unique clientId assigned by the Service.
-![CREATE a Client](images/overflow_design_document/sequence_diagrams/create_client_SD.png)
 
 # 6.9 *Update ClientAccount Endpoint*
 
@@ -158,7 +152,6 @@ Inventory inventory;
 * Accepts data to update a `Client` name, email and/or phoneNumber.
   Returns the updated `Client`.
     * If the client is not found, will throw a `ClientNotFoundException`
-![UPDATE a Client](images/overflow_design_document/sequence_diagrams/update_client_SD.png)
 
 # 7. Tables
 ````
@@ -194,7 +187,3 @@ pages. It should be clear what the interactions will be on the page, especially
 where customers enter and submit data. You may want to accompany the mockups
 with some description of behaviors of the page (e.g. “When customer submits the
 submit-dog-photo button, the customer is sent to the doggie detail page”)*
-
-![Client landing page.](images/overflow_design_document/landing_page.jpg)
-![Client checkout page.](images/overflow_design_document/checkout_page.jpg)
-![Client product detail page.](images/overflow_design_document/product_detail_page.jpg)
