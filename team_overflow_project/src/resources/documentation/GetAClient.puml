@@ -1,0 +1,31 @@
+@startuml
+title Get Client
+
+Client -> APIGateway : GET/clients/clientId
+activate Client
+APIGateway -> Lambda
+activate Lambda
+activate GetClientActivity
+activate ClientDao
+Lambda -> GetClientActivity : handleRequest(GetClientRequest, Context)
+GetClientActivity -> ClientDao : getClient(requestedId : String)
+ClientDao -> clients : load client by ID
+
+alt if client ID does not exist
+ ClientDao <-- clients : null
+ Lambda <-- ClientDao : throw new ClientNotFoundException
+ APIGateway <-- Lambda
+ Client <-- APIGateway : 404 Response
+else otherwise, continue
+end
+
+ClientDao <-- clients : Client
+GetClientActivity <-- ClientDao : Client
+Lambda <-- GetClientActivity : GetClientResult
+APIGateway <-- Lambda
+deactivate ClientDao
+deactivate GetClientActivity
+deactivate Lambda
+Client <-- APIGateway : 200 Response
+deactivate Client
+@enduml

@@ -1,0 +1,234 @@
+@startuml
+title Overflow
+
+class Product {
+-String productId
+-String productName
+-Integer quantity
+-Double price
+}
+
+class Inventory {
+-String inventoryId
+-List<Product> products
+-Double totalCost
+}
+
+class Client {
+-String clientId
+-String name
+-String email
+-String phoneNumber
+-Inventory inventory
+}
+
+class ProductDAO {
+-dynamoDBMapper: DynamoDBMapper
+    getProduct(String productId): Product
+    saveProduct(String productId): Product
+}
+
+class InventoryDAO {
+-dynamoDBMapper: DynamoDBMapper
+    getOrder(String inventoryId): Inventory
+    saveOrder(String inventoryId): Inventory
+}
+
+
+class ClientDAO {
+-dynamoDBMapper: DynamoDBMapper
+    getOrder(String clientId): ClientAccount
+    saveOrder(String clientId): ClientAccount
+}
+
+
+class GetProductRequest{
+-String productId
+    getId(): productId
+}
+
+class GetProductResult{
+-Product product
+    getProduct() : Product
+    setProduct()
+}
+
+class GetProductActivity {
+-Logger
+-ProductDAO
+handleRequest(GetProductRequest,Context) : GetProductResult
+}
+
+class CreateProductRequest{
+-String productId
+-String productName
+-Integer quantity
+-Double price
+setId(): productId
+setProductName(): productName
+setQuantity(): quantity
+setPrice(): price
+}
+
+class CreateProductActivity {
+-Logger
+-ProductDAO
+handleRequest(CreateProductRequest,Context) : CreateProductResult
+}
+
+class UpdateProductRequest{
+-String productId
+setPrice(): productPrice
+setQuantity(): productQuantity
+}
+
+class UpdateProductActivity {
+-Logger
+-ProductDAO
+handleRequest(CreateProductRequest,Context) : UpdateProductResult}
+
+class DeleteProductRequest{
+-String productId
+getId(): productId
+}
+
+class DeleteProductActivity {
+-Logger
+-ProductDAO
+handleRequest(CreateProductRequest,Context) : DeleteProductResult
+}
+
+class GetClientAccountRequest{
+-String ClientId
+getId(): ClientId
+}
+
+class GetClientAccountActivity {
+-Logger
+-ClientAccountDAO
+handleRequest(GetClientAccountRequest,Context) : GetClientAccountResult
+}
+
+class CreateClientAccountRequest{
+-String clientId
+-String clientName
+-String clientEmail
+-String clientPhoneNumber
+-List<Product> products
+-Nonprofit nonprofit
+-List<Customer> customers
+setClientId (): clientId
+setClientName(): ClientName
+setClientEmail (): ClientEmail
+setClientPhoneNumber(): ClientPhoneNumber
+setProducts(): List<Product>
+setNonprofit(): Nonprofit
+setCustomers() :List<Customer>
+}
+
+class CreateClientAccountActivity {
+-Logger
+-ClientAccountDAO
+handleRequest(CreateClientAccountRequest,Context) : CreateClientAccountResult
+}
+
+class UpdateClientAccountRequest{
+-String ClientAccountId
+getId(): ClientAccountId
+}
+
+class UpdateClientAccountActivity {
+-Logger
+-ClientAccountDAO
+handleRequest(CreateClientAccountRequest,Context) : UpdateClientAccountResult}
+
+class DeleteClientAccountRequest{
+-String ClientId
+getId(): ClientId
+}
+
+class DeleteClientAccountActivity {
+-Logger
+-ClientAccountDAO
+handleRequest(CreateClientAccountRequest,Context) : DeleteClientAccountResult
+}
+
+class CreateClientAccountActivity {
+-Logger
+-ClientAccountDAO
+handleRequest(CreateClientAccountRequest,Context) : CreateClientAccountResult
+}
+
+class UpdateClientAccountRequest{
+-String ClientId
+getId(): ClientId
+}
+
+class UpdateClientAccountActivity {
+-Logger
+-ClientAccountDAO
+handleRequest(CreateClientAccountRequest,Context) : UpdateClientAccountResult}
+
+class DeleteClientAccountRequest{
+-String ClientId
+getId(): ClientId
+}
+
+class DeleteClientAccountActivity {
+-Logger
+-ClientAccountDAO
+handleRequest(CreateClientAccountRequest,Context) : DeleteClientAccountResult
+}
+
+
+ProductDAO -> Product
+GetProductActivity -> ProductDAO
+GetProductRequest -> GetProductActivity
+CreateProductActivity -> ProductDAO
+CreateProductRequest -> CreateProductActivity
+UpdateProductActivity -> ProductDAO
+UpdateProductRequest -> UpdateProductActivity
+DeleteProductActivity -> ProductDAO
+DeleteProductRequest -> DeleteProductActivity
+
+NonprofitDAO -> Nonprofit
+GetNonprofitActivity -> NonprofitDAO
+GetNonprofitRequest -> GetNonprofitActivity
+CreateNonprofitActivity -> NonprofitDAO
+CreateNonprofitRequest -> CreateNonprofitActivity
+UpdateNonprofitActivity -> NonprofitDAO
+UpdateNonprofitRequest -> UpdateNonprofitActivity
+
+OrderDAO -> Order
+GetOrderActivity -> OrderDAO
+GetOrderRequest -> GetOrderActivity
+CreateOrderActivity -> OrderDAO
+CreateOrderRequest -> CreateOrderActivity
+UpdateOrderActivity -> OrderDAO
+UpdateOrderRequest -> UpdateOrderActivity
+DeleteOrderActivity -> OrderDAO
+DeleteOrderRequest -> DeleteOrderActivity
+
+ClientAccountDAO -> ClientAccount
+GetClientAccountActivity -> ClientAccountDAO
+GetClientAccountRequest -> GetClientAccountActivity
+CreateClientAccountActivity -> ClientAccountDAO
+CreateClientAccountRequest -> CreateClientAccountActivity
+UpdateClientAccountActivity -> ClientAccountDAO
+UpdateClientAccountRequest -> UpdateClientAccountActivity
+DeleteClientAccountActivity -> ClientAccountDAO
+DeleteClientAccountRequest -> DeleteClientAccountActivity
+
+CustomerAccountDAO -> CustomerAccount
+GetCustomerAccountActivity -> CustomerAccountDAO
+GetCustomerAccountRequest -> GetCustomerAccountActivity
+CreateCustomerAccountActivity -> CustomerAccountDAO
+CreateCustomerAccountRequest -> CreateCustomerAccountActivity
+
+
+class NonprofitNotFoundException {}
+class ClientAccountNotFoundException {}
+class CustomerNotFoundException {}
+class OrderNotFoundException {}
+class productNotFoundException {}
+@enduml

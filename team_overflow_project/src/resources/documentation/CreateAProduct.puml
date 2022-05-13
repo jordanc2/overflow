@@ -1,0 +1,44 @@
+@startuml
+title Create Product
+
+actor Client
+participant "API Gateway" as APIGateway
+participant Lambda
+participant CreateProductActivity
+participant ProductDao
+participant ServiceUtils
+database products
+
+Client -> APIGateway : POST/products/
+activate Client
+APIGateway -> Lambda
+activate Lambda
+activate CreateProductActivity
+activate ProductDao
+Lambda -> CreateProductActivity : handleRequest(CreateProductRequest, Context)
+CreateProductActivity -> ServiceUtils : isValidString(name)
+
+alt if product name is invalid
+CreateProductActivity <-- ServiceUtils : false
+Lambda <-- CreateProductActivity : throw InvalidAttributeValueException
+APIGateway <-- Lambda
+Client <-- APIGateway : 400 Response
+else otherwise, continue
+end
+
+CreateProductActivity -> ServiceUtils : generateProductId()
+CreateProductActivity <-- ServiceUtils : new Product ID
+CreateProductActivity -> CreateProductActivity : popluate Product object
+CreateProductActivity -> ProductDao : saveProduct(Product)
+ProductDao -> products : save product
+ProductDao <-- products
+
+CreateProductActivity <-- ProductDao : Product
+Lambda <-- CreateProductActivity : CreateProductResult
+APIGateway <-- Lambda
+deactivate ProductDao
+deactivate CreateProductActivity
+deactivate Lambda
+Client <-- APIGateway : 200 Response
+deactivate Client
+@enduml

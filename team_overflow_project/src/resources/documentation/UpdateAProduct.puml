@@ -1,0 +1,52 @@
+@startuml
+title Update Product
+
+actor Client
+participant "API Gateway" as APIGateway
+participant Lambda
+participant UpdateProductActivity
+participant ProductDao
+database products
+
+Client -> APIGateway : PUT/products/productId
+activate Client
+APIGateway -> Lambda
+activate Lambda
+activate UpdateProductActivity
+activate ProductDao
+Lambda -> UpdateProductActivity : handleRequest(UpdateProductRequest, Context)
+UpdateProductActivity -> ProductDao : getProduct(requestedId : String)
+ProductDao -> products : load product by ID
+
+alt if product ID does not exist
+ ProductDao <-- products : null
+ Lambda <-- ProductDao : throw new ProductNotFoundException
+ APIGateway <-- Lambda
+ Client <-- APIGateway : 400 Response
+else otherwise, continue
+end
+
+ProductDao <-- products : Product
+UpdateProductActivity <-- ProductDao : return Product object
+UpdateProductActivity -> UpdateProductActivity : validate product ID matches request
+
+alt if product ID does not match
+ Lambda <-- UpdateProductActivity : throw new InvalidAttributeChangeException
+ APIGateway <-- Lambda
+ Client <-- APIGateway : 400 Response
+else otherwise, continue
+end
+
+UpdateProductActivity -> UpdateProductActivity : update Product
+UpdateProductActivity -> ProductDao : saveProduct(Product)
+ProductDao -> products : store Product
+ProductDao <-- products : return Product
+UpdateProductActivity <-- ProductDao : return updated Product object
+Lambda <-- UpdateProductActivity : UpdateProductResult
+APIGateway <-- Lambda
+deactivate ProductDao
+deactivate UpdateProductActivity
+deactivate Lambda
+Client <-- APIGateway : 200 Response
+deactivate Client
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+title Delete Product
+
+actor Client
+participant "API Gateway" as APIGateway
+participant Lambda
+participant DeleteProductActivity
+participant ProductDao
+database products
+
+Client -> APIGateway : DELETE/products/productId
+activate Client
+APIGateway -> Lambda
+activate Lambda
+activate DeleteProductActivity
+activate ProductDao
+Lambda -> DeleteProductActivity : handleRequest(DeleteProductRequest, Context)
+DeleteProductActivity -> ProductDao : getProduct(productId)
+ProductDao -> products : load product by ID
+
+alt if product ID does not exist
+ ProductDao <-- products : null
+ Lambda <-- ProductDao : Product already does not exist
+ APIGateway <-- Lambda
+ Client <-- APIGateway : 200 Response
+else otherwise, continue
+end
+
+ProductDao <- products : Product
+DeleteProductActivity <-- ProductDao : return Product object
+DeleteProductActivity -> DeleteProductActivity : validate product ID matches request
+
+alt if product ID does not match
+ Lambda <-- DeleteProductActivity : throw new InvalidAttributeChangeException
+ APIGateway <-- Lambda
+ Client <-- APIGateway : 400 Response
+else otherwise, continue
+end
+
+DeleteProductActivity -> DeleteProductActivity : delete requested Product
+Lambda <-- DeleteProductActivity : DeleteProductResult
+APIGateway <-- Lambda
+deactivate ProductDao
+deactivate DeleteProductActivity
+deactivate Lambda
+Client <-- APIGateway : 200 Response
+deactivate Client
+@enduml

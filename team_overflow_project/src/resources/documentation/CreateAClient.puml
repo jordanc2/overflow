@@ -1,0 +1,44 @@
+@startuml
+title Create Client
+
+actor Client
+participant "API Gateway" as APIGateway
+participant Lambda
+participant CreateClientActivity
+participant ClientDao
+participant ServiceUtils
+database clients
+
+Client -> APIGateway : POST/clients/
+activate Client
+APIGateway -> Lambda
+activate Lambda
+activate CreateClientActivity
+activate ClientDao
+Lambda -> CreateClientActivity : handleRequest(CreateClientRequest, Context)
+CreateClientActivity -> ServiceUtils : isValidString(name)
+
+alt if client name is invalid
+ CreateClientActivity <-- ServiceUtils : false
+ Lambda <-- CreateClientActivity : throw new InvalidAttributeValueException
+ APIGateway <-- Lambda
+ Client <-- APIGateway : 404 Response
+else otherwise, continue
+end
+
+CreateClientActivity -> ServiceUtils : generateClientId()
+CreateClientActivity <-- ServiceUtils : new client ID
+CreateClientActivity -> CreateClientActivity : populate Client object
+CreateClientActivity -> ClientDao : saveClient(Client)
+ClientDao -> clients : save client
+clients --> ClientDao
+
+CreateClientActivity <-- ClientDao : Client
+Lambda <-- CreateClientActivity : CreateClientResult
+APIGateway <-- Lambda
+deactivate ClientDao
+deactivate CreateClientActivity
+deactivate Lambda
+Client <-- APIGateway : 200 Response
+deactivate Client
+@enduml
